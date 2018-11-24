@@ -170,8 +170,6 @@ public interface ParserConstants
         "Era esperado caracter",
         "Era esperado cadeia",
         "Era esperado procedimento",
-        "Era esperado inicio",
-        "Era esperado fim",
         "Era esperado inteiro",
         "Era esperado booleano",
         "Era esperado funcao",

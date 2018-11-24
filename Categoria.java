@@ -1,0 +1,4 @@
+public enum Categoria {
+    ID_PROGRAMA,ID_CONSTANTE,ID_VARIAVEL,ID_PROCEDIMENTO;
+
+}
