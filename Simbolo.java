@@ -1,17 +1,27 @@
+import java.util.ArrayList;
+
 public class Simbolo {
     private String nome;
     private Categoria categoria;
-    private String atrib1;
-    private String atrib2;
+    private ArrayList<String> atribs;
     private String link;
+    private Tipo tipo;
 
 
-    public Simbolo(String nome, Categoria categoria, String atrib1, String atrib2, String link) {
+    public Simbolo(String nome, Categoria categoria, ArrayList<String> atribs, String link,Tipo tipo) {
         this.nome = nome;
         this.categoria = categoria;
-        this.atrib1 = atrib1;
-        this.atrib2 = atrib2;
+        this.atribs=atribs;
         this.link = link;
+        this.tipo= tipo;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
     public String getNome() {
@@ -30,20 +40,12 @@ public class Simbolo {
         this.categoria = categoria;
     }
 
-    public String getAtrib1() {
-        return atrib1;
+    public ArrayList<String> getAtribs() {
+        return atribs;
     }
 
-    public void setAtrib1(String atrib1) {
-        this.atrib1 = atrib1;
-    }
-
-    public String getAtrib2() {
-        return atrib2;
-    }
-
-    public void setAtrib2(String atrib2) {
-        this.atrib2 = atrib2;
+    public void setAtribs(ArrayList<String> atribs) {
+        this.atribs = atribs;
     }
 
     public String getLink() {

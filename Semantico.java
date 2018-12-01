@@ -5,7 +5,7 @@ public class Semantico implements Constants {
 
     ArrayList<Simbolo> tabSimbolos = new ArrayList<>();
     int nivelAtual;
-    int deslocamento;
+    ArrayList<Integer> deslocamento;
     String contextoLID = "";
     int posPrimId;
     int posUltLId;
@@ -16,18 +16,18 @@ public class Semantico implements Constants {
     int npa = 0;
     Categoria catAtual;
     String subCatAtual = "";
-    String tipoAtual = "";
-    String tipoMetodo = "";
-    String tipoConst;
+    Tipo tipoAtual;
+    Tipo tipoMetodo;
+    Tipo tipoConst;
     String valorConst;
-    String tipoExp = "";
+    Tipo tipoExp;
     String mpp = "";
-    String tipoLadEsq = "";
+    Tipo tipoLadEsq;
     String tipoVarIndexada = "";
     String contextoEXP = "";
-    String tipoExpSimples= "" ;
-    private String tipoTermo = "";
-    private String tipoFator = "";
+    Tipo tipoExpSimples;
+    Tipo tipoTermo;
+    Tipo tipoFator;
 
 
     public void executeAction(int action, Token token) throws SemanticError {
@@ -278,22 +278,28 @@ public class Semantico implements Constants {
     }
 
     private void acao180(Token token) {
-
+        tipoConst = Tipo.CADEIA;
+        valorConst = token.getLexeme();
     }
 
     private void acao179(Token token) {
-
+        tipoConst = Tipo.BOOLEANO;
+        valorConst = token.getLexeme();
     }
 
     private void acao178(Token token) {
-
+        tipoConst = Tipo.BOOLEANO;
+        valorConst = token.getLexeme();
     }
 
     private void acao177(Token token) {
-
+        tipoConst = Tipo.REAL;
+        valorConst = token.getLexeme();
     }
 
     private void acao176(Token token) {
+        tipoConst = Tipo.INTEIRO;
+        valorConst = token.getLexeme();
 
     }
 
@@ -396,7 +402,7 @@ public class Semantico implements Constants {
     }
 
     private void acao150(Token token) {
-     tipoExpSimples = tipoTermo;
+        tipoExpSimples = tipoTermo;
     }
 
     private void acao149(Token token) {
@@ -428,19 +434,19 @@ public class Semantico implements Constants {
     }
 
     private void acao142(Token token) {
-        tipoExp=tipoExpSimples;
+        tipoExp = tipoExpSimples;
 
     }
 
     private void acao141(Token token) throws SemanticError {
-        if(contextoEXP.equalsIgnoreCase("par-atual")){
+        if (contextoEXP.equalsIgnoreCase("par-atual")) {
             numParFormais++;
             //TODO Verifica se existe
             //Parâmetro Formal correspondente e se
             //o tipo e o MPP são compatíveis
         }
-        if(contextoEXP.equalsIgnoreCase("impressao")){
-            if(tipoExp.equalsIgnoreCase("booleano")){
+        if (contextoEXP.equalsIgnoreCase("impressao")) {
+            if (tipoExp==Tipo.BOOLEANO) {
                 throw new SemanticError("Tipo invalido para impressão", token.getPosition());
             }
         }
@@ -452,7 +458,7 @@ public class Semantico implements Constants {
         if (simb.getCategoria() != Categoria.PROCEDIMENTO) {
             throw new SemanticError("Id deveria ser um método", token.getPosition());
         } else {
-            if (simb.getAtrib1() != "nulo") {
+            if (simb.getAtribs().get(0) != "nulo") {
                 throw new SemanticError("esperava-se um método sem tipo", token.getPosition());
             } else if (numParFormais != 0) {
                 throw new SemanticError("Erro na quantidade de parâmetros", token.getPosition());
@@ -477,17 +483,17 @@ public class Semantico implements Constants {
         Simbolo simb = tabSimbolos.get(posId);
         if (simb.getCategoria() != Categoria.PROCEDIMENTO) {
             throw new SemanticError("id deveria ser um método", token.getPosition());
-        } else if (!simb.getAtrib1().equalsIgnoreCase("nulo")) {
+        } else if (!simb.getAtribs().get(0).equalsIgnoreCase("nulo")) {
             throw new SemanticError("esperava-se um método sem tipo", token.getPosition());
         }
     }
 
     private void acao136(Token token) throws SemanticError {
-        if (!tipoExp.equalsIgnoreCase("inteiro")) {
+        if (tipoExp!=Tipo.INTEIRO) {
             throw new SemanticError("Índice deveria ser inteiro", token.getPosition());
         } else {
             if (tipoVarIndexada.equalsIgnoreCase("cadeia")) {
-                tipoLadEsq = "caracter";
+                tipoLadEsq = Tipo.CARACTER;
             } else {
                 tipoLadEsq = null; //TODO pegar o tipo dos elementos do vetor pra colocar aqui
             }
@@ -508,7 +514,7 @@ public class Semantico implements Constants {
     }
 
     private void acao134(Token token) throws SemanticError {
-        if (!tipoExp.equalsIgnoreCase(tipoLadEsq)) {
+        if (tipoExp!=(tipoLadEsq)) {
             throw new SemanticError("Tipos incompatíveis", token.getPosition());
         }
     }
@@ -519,7 +525,7 @@ public class Semantico implements Constants {
             if (simb.getLink().equalsIgnoreCase("vetor")) {
                 throw new SemanticError("Id deveria ser indexado.", token.getPosition());
             } else {
-                tipoLadEsq = simb.getLink();
+                tipoLadEsq = simb.getTipo();
             }
         } else {
             throw new SemanticError("Id deveria ser uma variável ou parâmetro.", token.getPosition());
@@ -529,10 +535,10 @@ public class Semantico implements Constants {
 
 
     private void acao132(Token token) throws SemanticError {
-        if (tipoMetodo.equalsIgnoreCase("nulo")) {
+        if (tipoMetodo==Tipo.NULO) {
             throw new SemanticError("'Retorne' só pode ser utilizado em um método com tipo", token.getPosition());
         } else {
-            if (!tipoExp.equalsIgnoreCase(tipoMetodo)) {
+            if (tipoExp!=tipoMetodo) {
                 throw new SemanticError("Tipo de retorno inválido", token.getPosition());
             }
 
@@ -548,7 +554,7 @@ public class Semantico implements Constants {
     }
 
     private void acao129(Token token) throws SemanticError {
-        if (!tipoExp.equalsIgnoreCase("booleano") && !tipoExp.equalsIgnoreCase("inteiro")) {
+        if (tipoExp!=Tipo.BOOLEANO && tipoExp!=Tipo.INTEIRO) {
             throw new SemanticError("Tipo inválido da expressão", token.getPosition());
         }
 
@@ -571,11 +577,11 @@ public class Semantico implements Constants {
     }
 
     private void acao125(Token token) {
-        tipoMetodo = "nulo";
+        tipoMetodo = Tipo.NULO;
     }
 
     private void acao124(Token token) throws SemanticError {
-        if (tipoAtual.equalsIgnoreCase("cadeia")) {
+        if (tipoAtual==Tipo.CADEIA) {
             throw new SemanticError("Métodos devem ser do tipo pré-definido", token.getPosition());
         } else {
             tipoMetodo = tipoAtual;
@@ -584,7 +590,7 @@ public class Semantico implements Constants {
     }
 
     private void acao123(Token token) throws SemanticError {
-        if (!tipoAtual.equalsIgnoreCase("pre-definido")) {
+        if (tipoAtual==Tipo.CADEIA||tipoAtual==Tipo.VETOR) {
             throw new SemanticError("Parâmetro deve ser do tipo pré-definido", token.getPosition());
         } else {
             atualizaParametros(posPrimId, posUltLId);
@@ -597,7 +603,7 @@ public class Semantico implements Constants {
         for (int i = posPrimId; i <= posUltLId; i++) {
             Simbolo parametro = tabSimbolos.get(i);
             parametro.setCategoria(Categoria.PARAMETRO);
-            parametro.setLink(tipoAtual);
+            parametro.setTipo(tipoAtual);
         }
     }
 
@@ -615,14 +621,14 @@ public class Semantico implements Constants {
     private void acao120(Token token) {
         tabSimbolos = tabSimbolos.stream()
                 .filter(simbolo -> (
-                        simbolo.getCategoria() == Categoria.VARIAVEL && simbolo.getAtrib1().equalsIgnoreCase("" + nivelAtual)
+                        simbolo.getCategoria() == Categoria.VARIAVEL && simbolo.getAtribs().get(0).equalsIgnoreCase("" + nivelAtual)
                 )).collect(Collectors.toCollection(ArrayList::new));
         nivelAtual--;
 
     }
 
     private void acao119(Token token) {
-        tabSimbolos.get(idUltMetodoDeclarado).setAtrib1(tipoMetodo);
+        tabSimbolos.get(idUltMetodoDeclarado).setTipo(tipoMetodo);
     }
 
     private void acao118(Token token) {
@@ -633,7 +639,9 @@ public class Semantico implements Constants {
         if (jaDeclaradoNoNA(token)) {
             throw new SemanticError("Id já declarado.", token.getPosition());
         } else {
-            addMetodo(new Simbolo(token.getLexeme(), Categoria.PROCEDIMENTO, "" + nivelAtual, null, null));
+            ArrayList<String> atributos = new ArrayList<String>();
+            atributos.add("" + nivelAtual);
+            addMetodo(new Simbolo(token.getLexeme(), Categoria.PROCEDIMENTO, atributos,null, null));
             idUltMetodoDeclarado = tabSimbolos.size() - 1;
         }
     }
@@ -643,7 +651,7 @@ public class Semantico implements Constants {
     }
 
     private void acao115(Token token) throws SemanticError {
-        if (!tipoConst.equalsIgnoreCase(tipoAtual)) {
+        if (tipoConst!=(tipoAtual)) {
             throw new SemanticError("Tipo da constante incorreto.", token.getPosition());
         }
     }
@@ -676,7 +684,7 @@ public class Semantico implements Constants {
                 throw new SemanticError("Id não declarado.", token.getPosition());
             } else {
                 Simbolo atual = pegaSimboloDaTS(token);
-                if (atual.getCategoria() != Categoria.VARIAVEL || !atual.getLink().equalsIgnoreCase("booleano") {
+                if (atual.getCategoria() != Categoria.VARIAVEL || !atual.getLink().equalsIgnoreCase("booleano")) {
                     throw new SemanticError("Tipo inválido para leitura.", token.getPosition());
                 }
             }
@@ -686,7 +694,7 @@ public class Semantico implements Constants {
 
 
     private void acao112(Token token) {
-        if (tipoAtual.equalsIgnoreCase("cadeia")) {
+        if (tipoAtual==Tipo.CADEIA) {
             subCatAtual = "cadeia";
         } else {
             subCatAtual = "pre-definido";
@@ -694,7 +702,7 @@ public class Semantico implements Constants {
     }
 
     private void acao111(Token token) throws SemanticError {
-        if (!tipoConst.equalsIgnoreCase("inteiro")) {
+        if (tipoConst!=Tipo.INTEIRO) {
             throw new SemanticError("A dimensão deve ser uma constante inteira.", token.getPosition());
         } else {
             numElementos = Integer.parseInt(valorConst);
@@ -702,7 +710,7 @@ public class Semantico implements Constants {
     }
 
     private void acao110(Token token) throws SemanticError {
-        if (tipoAtual.equalsIgnoreCase("cadeia")) {
+        if (tipoAtual==Tipo.CADEIA) {
             throw new SemanticError("Vetor do tipo cadeia não é permitido.", token.getPosition());
         } else {
             subCatAtual = "vetor";
@@ -710,34 +718,41 @@ public class Semantico implements Constants {
     }
 
     private void acao109(Token token) throws SemanticError {
-        if (!tipoConst.equalsIgnoreCase("inteiro")) {
+        if (tipoConst!=Tipo.INTEIRO) {
             throw new SemanticError("Esperava-se uma constante inteira.", token.getId());
         }
 
     }
 
     private void acao108(Token token) {
-        tipoAtual = "caracter";
+        tipoAtual = Tipo.INTEIRO;
     }
 
     private void acao107(Token token) {
-        tipoAtual = "booleano";
+        tipoAtual = Tipo.BOOLEANO;
     }
 
     private void acao106(Token token) {
-        tipoAtual = "real";
+        tipoAtual = Tipo.REAL;
     }
 
     private void acao105(Token token) {
-        tipoAtual = "inteiro";
+        tipoAtual = Tipo.INTEIRO;
     }
 
     private void acao104(Token token) {
         for (int i = posPrimId; i < posUltLId; i++) {
             tabSimbolos.get(i).setCategoria(catAtual);
-            tabSimbolos.get(i).setAtrib1(subCatAtual);
-            tabSimbolos.get(i).setAtrib2(token.getLexeme());
-            //TODO fazer os deslocamento das variavel
+            tabSimbolos.get(i).setLink(subCatAtual);
+            tabSimbolos.get(i).getAtribs().add("" + nivelAtual);
+            if (catAtual == Categoria.VARIAVEL) {
+                tabSimbolos.get(i).getAtribs().add("" + deslocamento.get(nivelAtual));
+                if (tipoAtual==Tipo.CADEIA|| tipoAtual == Tipo.VETOR) {
+                    aumentaDeslocamento(numElementos);
+                } else {
+                    aumentaDeslocamento(1);
+                }
+            }
         }
     }
 
@@ -752,28 +767,38 @@ public class Semantico implements Constants {
 
     private void acao101(Token token) {
         nivelAtual = 0;
-        deslocamento = 0;
-        tabSimbolos.add(new Simbolo(token.getLexeme(), Categoria.PROGRAMA, null, null, null));
+        deslocamento = new ArrayList<>();
+        deslocamento.add(0);
+        tabSimbolos.add(new Simbolo(token.getLexeme(), Categoria.PROGRAMA, new ArrayList<String>(),null, null));
     }
 
     private boolean jaDeclaradoNoNA(Token token) {
-        //TODO
-        return true;
+        for (Simbolo s : tabSimbolos) {
+            if (token.getLexeme().equalsIgnoreCase(s.getNome())) {
+                if (s.getCategoria() != Categoria.PROGRAMA) {
+                    if (Integer.parseInt(s.getAtribs().get(0)) <= nivelAtual) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
     private void addMetodo(Simbolo simbolo) {
         tabSimbolos.add(simbolo);
         numParFormais = 0;
-        nivelAtual++;
-        deslocamento = 0;
+        aumentaNivel();
 
     }
 
 
     private void addSimbolo(Token token) {
-        tabSimbolos.add(new Simbolo(token.getLexeme(), catAtual, "" + nivelAtual, "" + deslocamento, tipoAtual));
-        deslocamento++;
+        ArrayList<String> atributos = new ArrayList<>();
+        tabSimbolos.add(new Simbolo(token.getLexeme(), null, atributos,null, tipoAtual));
     }
 
     private Integer pegaIdDoToken(Token token) {
@@ -786,7 +811,28 @@ public class Semantico implements Constants {
     }
 
     private Simbolo pegaSimboloDaTS(Token token) {
-        //TODO lidar c nível
-        return tabSimbolos.stream().filter(simbolo -> token.getLexeme().equalsIgnoreCase(simbolo.getNome())).findAny().orElse(null);
+        return tabSimbolos.stream().filter(simbolo -> (token.getLexeme().equalsIgnoreCase(simbolo.getNome()) &&
+                Integer.parseInt(simbolo.getAtribs().get(0)) == nivelAtual))
+                .findAny()
+                .orElse(null);
+    }
+
+    private int aumentaNivel() {
+        nivelAtual++;
+        if (deslocamento.size() < nivelAtual) {
+            deslocamento.add(0);
+        }
+        return deslocamento.get(nivelAtual);
+    }
+
+    private int diminuiNivel() {
+        nivelAtual--;
+        return nivelAtual;
+    }
+
+    private int aumentaDeslocamento(int shift) {
+        Integer des = deslocamento.get(nivelAtual);
+        deslocamento.set(nivelAtual, des + shift);
+        return des;
     }
 }
