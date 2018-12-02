@@ -4,16 +4,18 @@ public class Simbolo {
     private String nome;
     private Categoria categoria;
     private ArrayList<String> atribs;
-    private String link;
+    private Link link;
     private Tipo tipo;
+    private ArrayList<Integer> params;
 
 
-    public Simbolo(String nome, Categoria categoria, ArrayList<String> atribs, String link,Tipo tipo) {
+    public Simbolo(String nome, Categoria categoria, ArrayList<String> atribs, Link link,Tipo tipo,ArrayList<Integer> params) {
         this.nome = nome;
         this.categoria = categoria;
         this.atribs=atribs;
         this.link = link;
         this.tipo= tipo;
+        this.params = params;
     }
 
     public Tipo getTipo() {
@@ -48,11 +50,19 @@ public class Simbolo {
         this.atribs = atribs;
     }
 
-    public String getLink() {
+    public Link getLink() {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(Link link) {
         this.link = link;
+    }
+
+    public ArrayList<Integer> getParams() {
+        return params;
+    }
+
+    public void setParams(ArrayList<Integer> params) {
+        this.params = params;
     }
 }
