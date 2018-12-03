@@ -327,7 +327,7 @@ public class Semantico implements Constants {
     }
 
     private void acao174(Token token) throws SemanticError {
-        Simbolo simbId = pegaSimboloDaTS(token);
+        Simbolo simbId = tabSimbolos.get(posId);
         if (simbId.getCategoria() == Categoria.VARIAVEL || simbId.getCategoria() == Categoria.PARAMETRO) {
             if (simbId.getLink() == Link.VETOR) {
                 throw new SemanticError("Vetor deve ser indexado",token.getPosition());
@@ -337,8 +337,8 @@ public class Semantico implements Constants {
         } else if (simbId.getCategoria() == Categoria.PROCEDIMENTO) {
             if (simbId.getTipo() == Tipo.NULO) {
                 throw new SemanticError("Esperava-se um método com tipo",token.getPosition());
-            } else if (numParFormais != 0) {
-                throw new SemanticError("Erro na quantidade de parâmetros",token.getPosition());
+            } else if (Integer.parseInt(tabSimbolos.get(posId).getAtribs().get(1)) != 0) {
+                throw new SemanticError("(174)Erro na quantidade de parâmetros",token.getPosition());
             } else {
                 tipoVar = simbId.getTipo();
             }
@@ -365,7 +365,7 @@ public class Semantico implements Constants {
         if (numParFormais == numParAtuais) {
             tipoVar = tabSimbolos.get(posId).getTipo();
         } else {
-            throw new SemanticError("Erro na quantidade de parâmetros.", token.getPosition());
+            throw new SemanticError("(172)Erro na quantidade de parâmetros.", token.getPosition());
         }
 
     }
@@ -592,7 +592,7 @@ public class Semantico implements Constants {
             if (simb.getTipo() != Tipo.NULO) {
                 throw new SemanticError("esperava-se um método sem tipo", token.getPosition());
             } else if (numParFormais != 0) {
-                throw new SemanticError("Erro na quantidade de parâmetros", token.getPosition());
+                throw new SemanticError("(140)Erro na quantidade de parâmetros", token.getPosition());
             }
 
         }
@@ -601,7 +601,7 @@ public class Semantico implements Constants {
 
     private void acao139(Token token) throws SemanticError {
         if (npa != numParFormais) {
-            throw new SemanticError("Erro na quantidade de parâmetros", token.getPosition());
+            throw new SemanticError("(139)Erro na quantidade de parâmetros", token.getPosition());
         }
     }
 
