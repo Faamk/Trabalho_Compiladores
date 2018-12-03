@@ -569,14 +569,12 @@ public class Semantico implements Constants {
         if (contextoEXP.equalsIgnoreCase("par-atual")) {
             numParAtuais++;
             Simbolo metodo = tabSimbolos.get(idMetodoExecutado);
-
-            if (tabSimbolos.get(metodo.getParams().get(numParAtuais - 1)).getAtribs().get(1).equalsIgnoreCase("referencia")) {
-                if (pegaSimboloDaTS(token).getTipo() != tabSimbolos.get(metodo.getParams().get(numParAtuais - 1)).getTipo()) {
+//
+            if (metodo.getParams().size()>=numParAtuais) {
+                if (tipoExp != tabSimbolos.get(metodo.getParams().get(numParAtuais - 1)).getTipo()) {
                     throw new SemanticError("Tipo de parametro incorreto", token.getPosition()); //TODO resolver como saber o tipo da exp e se é certo
                 }
             }
-
-
         }
         if (contextoEXP.equalsIgnoreCase("impressao")) {
             if (tipoExp == Tipo.BOOLEANO) {
@@ -591,7 +589,7 @@ public class Semantico implements Constants {
         if (simb.getCategoria() != Categoria.PROCEDIMENTO) {
             throw new SemanticError("Id deveria ser um método", token.getPosition());
         } else {
-            if (simb.getAtribs().get(0) != "nulo") {
+            if (simb.getTipo() != Tipo.NULO) {
                 throw new SemanticError("esperava-se um método sem tipo", token.getPosition());
             } else if (numParFormais != 0) {
                 throw new SemanticError("Erro na quantidade de parâmetros", token.getPosition());
@@ -686,7 +684,7 @@ public class Semantico implements Constants {
     }
 
     private void acao131(Token token) {
-        contextoLID = "impressao";
+        contextoEXP = "impressao";
     }
 
     private void acao130(Token token) {
@@ -829,7 +827,7 @@ public class Semantico implements Constants {
                 throw new SemanticError("Id não declarado.", token.getPosition());
             } else {
                 Simbolo atual = pegaSimboloDaTS(token);
-                if (atual.getCategoria() != Categoria.VARIAVEL || atual.getTipo() != Tipo.BOOLEANO) {
+                if (!(atual.getCategoria() == Categoria.VARIAVEL && (atual.getTipo() != Tipo.BOOLEANO && atual.getLink()!=Link.VETOR))) {
                     throw new SemanticError("Tipo inválido para leitura.", token.getPosition());
                 }
             }
@@ -964,7 +962,7 @@ public class Semantico implements Constants {
 
     private Simbolo pegaSimboloDaTS(Token token) {
         return tabSimbolos.stream().filter(simbolo -> (token.getLexeme().equalsIgnoreCase(simbolo.getNome()) &&
-                Integer.parseInt(simbolo.getAtribs().get(0)) == nivelAtual))
+                Integer.parseInt(simbolo.getAtribs().get(0)) <= nivelAtual))
                 .findAny()
                 .orElse(null);
     }
