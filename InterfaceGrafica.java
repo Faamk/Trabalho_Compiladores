@@ -10,7 +10,7 @@ public class InterfaceGrafica {
     JScrollPane scrollCod = new JScrollPane(codigo);
     JScrollPane scrollRes = new JScrollPane(resultado);
     JButton botaoLex = new JButton("Léxica");
-    JButton botaoSintat = new JButton("Sintática");
+    JButton botaoSintat = new JButton("Sintática/Semântica");
     Lexico lexico = new Lexico();
     Semantico semantico = new Semantico();
     Sintatico sintatico = new Sintatico();
@@ -27,8 +27,8 @@ public class InterfaceGrafica {
         tipoAnali.setBounds(330,580,300,40);
         digite.setBounds(50,20,200,20);
         scrollCod.setBounds(50,50,700,500);
-        botaoLex.setBounds(530,580,100,40);
-        botaoSintat.setBounds(660,580,100,40);
+        botaoLex.setBounds(480,580,100,40);
+        botaoSintat.setBounds(600,580,160,40);
 
         frame.getContentPane().add(botaoLex);
         frame.getContentPane().add(botaoSintat);

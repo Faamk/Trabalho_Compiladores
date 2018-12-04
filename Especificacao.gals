@@ -100,6 +100,7 @@ retorne = id : "retorne"
 <rcomid>
 <lista_expr> 
 <rep_lexpr>
+<rep_lexpri>
 <expressao>
 <resto_expressao>
 <oprel>
@@ -152,7 +153,7 @@ retorne = id : "retorne"
              | se <expressao> #129 entao <comando> <senaoparte> 
              | enquanto <expressao> #129 faca <comando>                               
              | leia "(" #130 <lid> ")"                                    
-             | escreva "(" #131 <lista_expr> ")"  
+             | escreva "(" #131 <expressao> #131 #141 <rep_lexpri> ")"  
              | retorne  <expressao> #132
 	   |  î ;
 
@@ -166,6 +167,8 @@ retorne = id : "retorne"
 <lista_expr>  ::=  <expressao> #141 <rep_lexpr> ;
 
 <rep_lexpr>  ::= "," <expressao> #141 <rep_lexpr> |  î ;
+
+<rep_lexpri>  ::= "," <expressao> #131 #141 <rep_lexpri> |  î #131 ;
 
 <expressao>  ::= <expsimp> #142 <resto_expressao> ;
 
