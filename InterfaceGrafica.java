@@ -82,7 +82,7 @@ public class InterfaceGrafica {
             codigo.requestFocus();
             return;
         }
-        resultado.setText("Análise sintática realizada com Sucesso!");
+        resultado.setText("Análise sintática/Semântica realizada com Sucesso!");
     }
 
 

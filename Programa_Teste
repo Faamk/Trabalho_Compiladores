@@ -1,0 +1,38 @@
+programa media;
+
+inteiro[10] colecao;
+inteiro i,num;
+real mediar;
+booleano b;
+
+{
+i:=0;
+enquanto i<10
+faca{
+ leia (num);
+ colecao[i]:= num;
+ mediar := mediar + colecao[i];
+};
+
+mediar := mediar / 10;
+
+i:=0;
+
+enquanto mediar<10
+faca{
+ se colecao[i] > mediar
+ entao i:= i + 1;
+};
+
+b := mediar<10;
+se b entao
+b := falso
+senao
+b := verdadeiro;
+
+mediar := num ou i;
+
+
+
+escreva ('Numeros maiores que a media =',i);
+}.
