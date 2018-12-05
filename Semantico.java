@@ -926,7 +926,7 @@ public class Semantico implements Constants {
         for (Simbolo s : tabSimbolos) {
             if (token.getLexeme().equalsIgnoreCase(s.getNome())) {
                 if (s.getCategoria() != Categoria.PROGRAMA) {
-                    if (Integer.parseInt(s.getAtribs().get(0)) <= nivelAtual) {
+                    if (Integer.parseInt(s.getAtribs().get(0)) == nivelAtual) {
                         return true;
                     }
                 } else {

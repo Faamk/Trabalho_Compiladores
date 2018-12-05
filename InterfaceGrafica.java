@@ -24,11 +24,11 @@ public class InterfaceGrafica {
 
         resultadoLabel.setBounds(50,680,300,40);
         scrollRes.setBounds(50,720,700,150);
-        tipoAnali.setBounds(330,580,300,40);
+        tipoAnali.setBounds(230,580,300,40);
         digite.setBounds(50,20,200,20);
         scrollCod.setBounds(50,50,700,500);
-        botaoLex.setBounds(480,580,100,40);
-        botaoSintat.setBounds(600,580,160,40);
+        botaoLex.setBounds(430,580,100,40);
+        botaoSintat.setBounds(560,580,200,40);
 
         frame.getContentPane().add(botaoLex);
         frame.getContentPane().add(botaoSintat);
